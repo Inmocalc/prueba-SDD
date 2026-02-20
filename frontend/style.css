@@ -1,0 +1,170 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  background: #f5e6c8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 1.5rem;
+  min-height: 100vh;
+}
+
+h1 {
+  color: #5a3a1a;
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+}
+
+/* Abacus frame */
+#abacus {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  background: #7a4a20;
+  padding: 20px 16px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  border: 3px solid #5a3a10;
+}
+
+/* Each rod column */
+.rod {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+
+/* Heaven bead area — bead rests at top (inactive), slides down when active */
+.heaven-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 64px;
+  padding-top: 6px;
+}
+
+/* Divider bar */
+.divider {
+  width: 44px;
+  height: 5px;
+  background: #3a1a00;
+  border-radius: 3px;
+  margin: 0;
+}
+
+/* Earth bead area — active beads slide up toward divider */
+.earth-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 180px;
+  padding-bottom: 6px;
+  gap: 6px;
+}
+
+/* Beads */
+.bead {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  background: #c8862a;
+}
+
+.bead:hover {
+  filter: brightness(1.15);
+}
+
+/* Heaven bead — inactive: rests at top of its section */
+.bead.heaven {
+  background: #c8862a;
+}
+
+/* Heaven bead active: slides down (toward divider) */
+.bead.heaven.active {
+  background: #f0c040;
+  box-shadow: 0 0 10px rgba(240, 192, 64, 0.7);
+  transform: translateY(22px);
+}
+
+/* Earth bead — inactive: rests at bottom of its section */
+.bead.earth {
+  background: #c8862a;
+}
+
+/* Earth bead active: slides up (toward divider) */
+.bead.earth.active {
+  background: #f0c040;
+  box-shadow: 0 0 10px rgba(240, 192, 64, 0.7);
+  transform: translateY(-6px);
+}
+
+/* Value display */
+#value-display {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #3a1a00;
+  letter-spacing: 6px;
+  font-family: monospace;
+  min-width: 340px;
+  text-align: center;
+  background: #ffe8a0;
+  padding: 0.4rem 1.2rem;
+  border-radius: 8px;
+  border: 2px solid #c8862a;
+}
+
+/* Controls */
+#controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+button {
+  padding: 0.5rem 1.8rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+#reset-btn {
+  background: #c0392b;
+  color: #fff;
+}
+
+#reset-btn:hover {
+  background: #e74c3c;
+}
+
+#save-btn {
+  background: #27ae60;
+  color: #fff;
+}
+
+#save-btn:hover {
+  background: #2ecc71;
+}
+
+/* Save confirmation — hidden by default */
+#save-confirm {
+  display: none;
+  color: #27ae60;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
