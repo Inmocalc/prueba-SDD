@@ -8,6 +8,20 @@
 </head>
 <body>
   <h1>Calculadora Ábaco</h1>
+
+  <div id="login-panel">
+    <h2>Login</h2>
+    <input id="login-username" type="text" placeholder="Username" autocomplete="username">
+    <input id="login-password" type="password" placeholder="Password" autocomplete="current-password">
+    <button id="login-btn">Login</button>
+    <span id="login-error"></span>
+  </div>
+
+  <div id="auth-bar">
+    <span>Logged in as <strong id="auth-username"></strong></span>
+    <button id="logout-btn">Logout</button>
+  </div>
+
   <div id="abacus"></div>
   <div id="value-display">0</div>
   <div id="controls">

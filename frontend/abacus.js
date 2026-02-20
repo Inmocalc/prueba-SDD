@@ -70,6 +70,85 @@ function handleHeavenClick(rodIndex) {
   updateDisplay();
 }
 
+// --- Auth helpers ---
+
+function getToken() {
+  return localStorage.getItem('abacus_token');
+}
+
+function setToken(token) {
+  localStorage.setItem('abacus_token', token);
+}
+
+function clearToken() {
+  localStorage.removeItem('abacus_token');
+  localStorage.removeItem('abacus_user');
+}
+
+function updateAuthUI() {
+  const token = getToken();
+  const loginPanel = document.getElementById('login-panel');
+  const authBar = document.getElementById('auth-bar');
+  const saveBtn = document.getElementById('save-btn');
+  const saveConfirm = document.getElementById('save-confirm');
+
+  if (token) {
+    loginPanel.style.display = 'none';
+    authBar.style.display = 'flex';
+    saveBtn.style.display = 'inline';
+    saveConfirm.style.display = 'none';
+    document.getElementById('auth-username').textContent =
+      localStorage.getItem('abacus_user') || '';
+  } else {
+    loginPanel.style.display = 'flex';
+    authBar.style.display = 'none';
+    saveBtn.style.display = 'none';
+    saveConfirm.style.display = 'none';
+  }
+}
+
+async function handleLogin(event) {
+  event.preventDefault();
+  const username = document.getElementById('login-username').value;
+  const password = document.getElementById('login-password').value;
+  const errorEl = document.getElementById('login-error');
+  errorEl.textContent = '';
+
+  try {
+    const res = await fetch('http://localhost:8000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setToken(data.token);
+      localStorage.setItem('abacus_user', data.username);
+      updateAuthUI();
+    } else if (res.status === 401) {
+      errorEl.textContent = 'Invalid credentials';
+    } else {
+      errorEl.textContent = 'Login failed. Try again.';
+    }
+  } catch (e) {
+    errorEl.textContent = 'Could not reach server.';
+  }
+}
+
+async function handleLogout() {
+  const token = getToken();
+  try {
+    await fetch('http://localhost:8000/logout', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+  } catch (e) {
+    // Ignore network errors — clear session locally regardless
+  }
+  clearToken();
+  updateAuthUI();
+}
+
 // --- Controls ---
 
 function resetAll() {
@@ -81,10 +160,14 @@ function resetAll() {
 
 async function saveValue() {
   const value = getTotalValue();
+  const token = getToken();
   try {
     const res = await fetch('http://localhost:8000/history', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
       body: JSON.stringify({ value }),
     });
     if (res.ok) {
@@ -139,5 +222,8 @@ function buildAbacus() {
 
 buildAbacus();
 updateDisplay();
+updateAuthUI();
 document.getElementById('reset-btn').addEventListener('click', resetAll);
 document.getElementById('save-btn').addEventListener('click', saveValue);
+document.getElementById('login-btn').addEventListener('click', handleLogin);
+document.getElementById('logout-btn').addEventListener('click', handleLogout);
